@@ -1,0 +1,75 @@
+[00:00:01.780] Server  LOG     ✓ Ready in 1254ms
+[00:00:09.882] Server  LOG     NavBar rendered
+[00:00:10.094] Server  WARN    ⚠ Cross origin request detected from 192.168.29.152 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[00:00:10.133] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:10.248] Browser LOG     NavBar rendered
+[00:00:10.248] Browser LOG     NavBar rendered
+[00:00:55.707] Server  LOG     NavBar rendered
+[00:00:55.946] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:56.068] Browser LOG     NavBar rendered
+[00:00:56.068] Browser LOG     NavBar rendered
+[00:04:33.138] Server  LOG     Dashboard rendered
+[00:04:33.304] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:04:33.501] Browser LOG     Dashboard rendered
+[00:04:33.501] Browser LOG     Dashboard rendered
+[00:04:33.501] Browser LOG     Dashboard rendered
+[00:04:33.501] Browser LOG     Dashboard rendered
+[00:04:33.501] Browser LOG     NavBar rendered
+[00:04:33.501] Browser LOG     NavBar rendered
+[00:04:33.501] Browser LOG     Dashboard rendered
+[00:04:33.501] Browser LOG     Dashboard rendered
+[00:04:33.501] Browser LOG     NavBar rendered
+[00:04:33.501] Browser LOG     NavBar rendered
+[00:04:34.043] Browser LOG     Dashboard rendered
+[00:04:34.043] Browser LOG     Dashboard rendered
+[00:04:34.043] Browser LOG     NavBar rendered
+[00:04:34.043] Browser LOG     NavBar rendered
+[00:04:35.843] Browser LOG     Dashboard rendered
+[00:04:35.843] Browser LOG     Dashboard rendered
+[00:04:35.843] Browser LOG     NavBar rendered
+[00:04:35.843] Browser LOG     NavBar rendered
+[00:04:56.601] Browser LOG     Dashboard rendered
+[00:04:56.601] Browser LOG     Dashboard rendered
+[00:04:56.602] Browser LOG     NavBar rendered
+[00:04:56.602] Browser LOG     NavBar rendered
+[00:20:20.935] Browser LOG     Dashboard rendered
+[00:20:20.935] Browser LOG     Dashboard rendered
+[00:20:20.935] Browser LOG     NavBar rendered
+[00:20:20.935] Browser LOG     NavBar rendered
+[00:20:23.851] Browser LOG     Dashboard rendered
+[00:20:23.851] Browser LOG     Dashboard rendered
+[00:20:23.851] Browser LOG     NavBar rendered
+[00:20:23.851] Browser LOG     NavBar rendered
+[00:20:31.913] Browser LOG     Dashboard rendered
+[00:20:31.913] Browser LOG     Dashboard rendered
+[00:20:31.913] Browser LOG     NavBar rendered
+[00:20:31.914] Browser LOG     NavBar rendered
+[00:24:21.604] Browser LOG     Dashboard rendered
+[00:24:21.604] Browser LOG     Dashboard rendered
+[00:24:21.604] Browser LOG     NavBar rendered
+[00:24:21.604] Browser LOG     NavBar rendered
+[00:24:24.142] Browser LOG     Dashboard rendered
+[00:24:24.142] Browser LOG     Dashboard rendered
+[00:24:24.142] Browser LOG     NavBar rendered
+[00:24:24.142] Browser LOG     NavBar rendered
+[00:24:42.280] Browser LOG     Dashboard rendered
+[00:24:42.281] Browser LOG     Dashboard rendered
+[00:24:42.281] Browser LOG     NavBar rendered
+[00:24:42.281] Browser LOG     NavBar rendered
+[00:24:43.748] Browser LOG     Dashboard rendered
+[00:24:43.748] Browser LOG     Dashboard rendered
+[00:24:43.748] Browser LOG     NavBar rendered
+[00:24:43.748] Browser LOG     NavBar rendered
+[00:24:45.353] Browser LOG     Dashboard rendered
+[00:24:45.353] Browser LOG     Dashboard rendered
+[00:24:45.353] Browser LOG     NavBar rendered
+[00:24:45.353] Browser LOG     NavBar rendered
+[01:15:09.845] Server  LOG     ✓ Compiled in 55ms
+[01:15:10.636] Browser LOG     Dashboard rendered
+[01:15:10.636] Browser LOG     Dashboard rendered
+[01:15:10.636] Browser LOG     NavBar rendered
+[01:15:10.636] Browser LOG     NavBar rendered
+[01:15:20.499] Server  LOG     ✓ Compiled in 39ms
+[01:15:20.626] Browser LOG     NavBar rendered
+[01:15:20.626] Browser LOG     NavBar rendered
