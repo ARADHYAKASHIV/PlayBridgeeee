@@ -11,6 +11,16 @@ import { logger } from './utils/logger';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+process.on('uncaughtException', (err: Error) => {
+    console.error('UNCAUGHT EXCEPTION:', err);
+    // Keep running if possible, or allow exit (depending on severity)
+    // process.exit(1); 
+});
+
+process.on('unhandledRejection', (reason: any) => {
+    console.error('UNHANDLED REJECTION:', reason);
+});
+
 app.use(cors({
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     credentials: true,
