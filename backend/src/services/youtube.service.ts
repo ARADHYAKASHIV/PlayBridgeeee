@@ -93,16 +93,30 @@ export class YouTubeService {
                 });
 
                 if (response.data.items) {
-                    const fetchedTracks = response.data.items.map((item: any) => ({
-                        id: item.id, // PlaylistItem ID
-                        title: item.snippet?.title,
-                        artist: item.snippet?.videoOwnerChannelTitle, // Fallback, distinct from Artist usually in description or title parsing needed
-                        // YouTube Music tracks usually have generic titles. 
-                        // Better metadata might require `youtube music` specific logic or parsing "Artist - Title"
-                        originalTitle: item.snippet?.title,
-                        videoOwner: item.snippet?.videoOwnerChannelTitle,
-                        videoId: item.contentDetails?.videoId,
-                    })).filter((t: any) => t.title && t.title !== 'Deleted video');
+                    const fetchedTracks = response.data.items.map((item: any) => {
+                        const rawTitle = item.snippet?.title || '';
+                        let artist = '';
+                        let title = rawTitle;
+
+                        // Try to split "Artist - Title"
+                        if (rawTitle.includes(' - ')) {
+                            const parts = rawTitle.split(' - ');
+                            artist = parts[0].trim();
+                            title = parts.slice(1).join(' - ').trim();
+                        } else {
+                            // Fallback to channel title if no hyphen
+                            artist = item.snippet?.videoOwnerChannelTitle || '';
+                        }
+
+                        return {
+                            id: item.id,
+                            title,
+                            artist,
+                            originalTitle: rawTitle,
+                            videoOwner: item.snippet?.videoOwnerChannelTitle,
+                            videoId: item.contentDetails?.videoId,
+                        };
+                    }).filter((t: any) => t.title && t.title !== 'Deleted video');
 
                     tracks = tracks.concat(fetchedTracks);
                 }

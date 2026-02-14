@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import { transferController } from '../controllers/transfer.controller';
+import { asyncHandler } from '../utils/asyncHandler';
 
 const router = Router();
 
-router.get('/history', (req, res) => transferController.getHistory(req, res));
-router.get('/youtube/playlists', (req, res) => transferController.getYouTubePlaylists(req, res)); // Helper to get source playlists
-router.post('/start', (req, res) => transferController.startTransfer(req, res));
-router.get('/:id', (req, res) => transferController.getStatus(req, res)); // Must be AFTER specific routes
+router.get('/history', asyncHandler((req: any, res: any) => transferController.getHistory(req, res)));
+router.get('/youtube/playlists', asyncHandler((req: any, res: any) => transferController.getYouTubePlaylists(req, res)));
+router.post('/start', asyncHandler((req: any, res: any) => transferController.startTransfer(req, res)));
+router.get('/:id', asyncHandler((req: any, res: any) => transferController.getStatus(req, res))); // Must be AFTER specific routes
 
 export default router;

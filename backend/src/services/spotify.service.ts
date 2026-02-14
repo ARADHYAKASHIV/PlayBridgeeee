@@ -60,28 +60,43 @@ export class SpotifyService {
         return spotifyApi;
     }
 
-    async searchTrack(userId: string, query: string, artist?: string) {
+    async searchTrack(userId: string, query: string, artist?: string, retryCount: number = 0): Promise<any> {
+        const MAX_RETRIES = 3;
+        const MAX_RETRY_WAIT = 10; // seconds — never wait longer than this
         const client = await this.getAuthenticatedClient(userId);
 
         const cleanTitle = (title: string) => {
             return title
-                .replace(/\(Official Video\)/gi, '')
-                .replace(/\(Official Audio\)/gi, '')
+                .replace(/\|.*$/g, '')               // Remove everything after |
+                .replace(/@\S+/g, '')                 // Remove @mentions
+                .replace(/Official\s*(Music\s*)?Video/gi, '')
+                .replace(/Official\s*Audio/gi, '')
+                .replace(/\(Official\)/gi, '')
+                .replace(/\(Lyrics?\)/gi, '')
                 .replace(/\(Video\)/gi, '')
-                .replace(/\(Lyrics\)/gi, '')
-                .replace(/\[.*?\]/g, '') // Remove [Official Video] etc
-                .replace(/\(.*?\) /g, '') // Remove (feat. X) if needed, but risky
-                .replace(/ft\..*/gi, '')
-                .replace(/feat\..*/gi, '')
+                .replace(/\(Audio\)/gi, '')
+                .replace(/\[.*?\]/g, '')              // Remove [anything in brackets]
+                .replace(/\(.*?\)/g, '')              // Remove (anything in parens)
+                .replace(/ft\..*$/gi, '')             // Remove ft. and everything after
+                .replace(/feat\..*$/gi, '')           // Remove feat. and everything after
+                .replace(/\bMV\b/gi, '')              // Remove standalone "MV"
+                .replace(/\bHD\b/gi, '')              // Remove standalone "HD"
+                .replace(/\b4K\b/gi, '')              // Remove standalone "4K"
+                .replace(/[-–—]\s*Topic$/gi, '')      // Remove "- Topic" (YouTube auto-generated channels)
+                .replace(/\s{2,}/g, ' ')              // Collapse multiple spaces
                 .trim();
         };
 
         const cleanedQuery = cleanTitle(query);
+        const naturalQuery = `${cleanedQuery} ${artist || ''}`.trim();
+
+        // Used for logging/debugging
+        logger.info(`Spotify Search Query: ${naturalQuery}`);
+
         const strategies = [
-            `track:${cleanedQuery} artist:${artist}`, // Strict with cleaned
-            `track:${cleanedQuery}`, // Title only cleaned
-            `track:${query} artist:${artist}`, // Original strict
-            `track:${query}`, // Original relaxed
+            naturalQuery, // Best bet: "Title Artist"
+            `track:${cleanedQuery} artist:${artist}`, // Strict
+            `track:${cleanedQuery}`, // Title only
         ];
 
         try {
@@ -91,10 +106,24 @@ export class SpotifyService {
                     if (result.body.tracks?.items.length) {
                         return result.body.tracks.items[0];
                     }
+                    // Small delay between strategy attempts to avoid hammering the API
+                    await new Promise(res => setTimeout(res, 200));
                 }
             }
             return null;
         } catch (error: any) {
+            if (error.statusCode === 429) {
+                if (retryCount >= MAX_RETRIES) {
+                    logger.error(`Rate limited (429) after ${MAX_RETRIES} retries for: ${query}. Giving up.`);
+                    return null;
+                }
+                // Extract retry-after, cap it to a sane value
+                const rawRetryAfter = parseInt(error.headers?.['retry-after'] || error.body?.['Retry-After'] || '2', 10);
+                const retryAfter = Math.min(isNaN(rawRetryAfter) ? 2 : rawRetryAfter, MAX_RETRY_WAIT);
+                logger.warn(`Rate limited (429). Retry ${retryCount + 1}/${MAX_RETRIES}, waiting ${retryAfter}s...`);
+                await new Promise(res => setTimeout(res, retryAfter * 1000));
+                return this.searchTrack(userId, query, artist, retryCount + 1);
+            }
             logger.error(error, `Error searching track: ${query}`);
             return null;
         }
@@ -141,6 +170,9 @@ export class SpotifyService {
         logger.info(`Creating playlist '${name}' for Spotify user '${me.id}'`);
         try {
             const playlist = await client.createPlaylist(name, { description: 'Imported Playlist', public: false });
+            logger.info(`Playlist created: ${playlist.body.id}`);
+            logger.info(`Playlist owner ID: ${playlist.body.owner.id}`);
+            logger.info(`Current user ID: ${me.id}`); // 'me' was fetched earlier
             return playlist.body.id;
         } catch (error: any) {
             logger.error({ error, name, userId }, 'Spotify createPlaylist failed');
@@ -150,6 +182,12 @@ export class SpotifyService {
 
     async addTracks(userId: string, playlistId: string, trackUris: string[]) {
         const client = await this.getAuthenticatedClient(userId);
+
+        try {
+            const me = await client.getMe();
+            logger.info(`Adding tracks as user: ${me.body.id} to playlist ${playlistId}`);
+        } catch (e) { logger.error(e, 'Failed to getMe in addTracks'); }
+
         // Spotify limit is 100 tracks per request
         const batchSize = 100;
         for (let i = 0; i < trackUris.length; i += batchSize) {

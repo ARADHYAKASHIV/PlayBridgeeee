@@ -52,6 +52,7 @@ export class TransferService {
             let failed = 0;
 
             for (const track of tracks) {
+                await new Promise(res => setTimeout(res, 800)); // Rate limit protection — Spotify dev-mode is strict
                 try {
                     // Clean title: Remove "(Official Video)", "ft.", etc? 
                     // Simple search first.
@@ -99,6 +100,9 @@ export class TransferService {
             }
 
             // 4. Add tracks to Spotify
+            logger.info(`Total tracks fetched from YouTube: ${tracks.length}`);
+            logger.info(`Total matched URIs: ${trackUris.length}`);
+
             if (trackUris.length > 0) {
                 await spotifyService.addTracks(transfer.userId, spotifyPlaylistId, trackUris);
             }

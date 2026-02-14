@@ -43,6 +43,13 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     res.status(500).json({ error: 'Internal Server Error' });
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     logger.info(`Server running on port ${PORT}`);
+});
+
+// Ensure the server keeps the event loop alive
+server.ref();
+
+server.on('close', () => {
+    logger.warn('HTTP server closed unexpectedly');
 });
